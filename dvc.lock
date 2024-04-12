@@ -44,3 +44,74 @@ stages:
       md5: 5a466afa5e841bab9ff7997a6638d231.dir
       size: 118059248
       nfiles: 2
+  training:
+    cmd: python src/cnnClassifier/pipeline/stage_03_training.py
+    deps:
+    - path: artifacts/data_ingestion/Chicken-fecal-images
+      hash: md5
+      md5: 9e1f8dd2eae3c29e9d635df89d438ae4.dir
+      size: 12207807
+      nfiles: 390
+    - path: artifacts/prepare_base_model
+      hash: md5
+      md5: 5a466afa5e841bab9ff7997a6638d231.dir
+      size: 118059248
+      nfiles: 2
+    - path: config/config.yaml
+      hash: md5
+      md5: 95e8e4a1cfad0e27a7f8b801c430cb24
+      size: 800
+    - path: src/cnnClassifier/components/prepare_callbacks.py
+      hash: md5
+      md5: 4f7780df23af03dc73d632397eaba7a9
+      size: 1030
+    - path: src/cnnClassifier/pipeline/stage_03_training.py
+      hash: md5
+      md5: e282c6aa149ee05234fa987f22537d15
+      size: 1266
+    params:
+      params.yaml:
+        AUGMENTATION: true
+        BATCH_SIZE: 16
+        EPOCHS: 10
+        IMAGE_SIZE:
+        - 224
+        - 224
+        - 3
+    outs:
+    - path: artifacts/training/model.h5
+      hash: md5
+      md5: 25268bd8d509bfc1400563dcde7e17b3
+      size: 59340720
+  evaluation:
+    cmd: python src/cnnClassifier/pipeline/stage_04_evaluation.py
+    deps:
+    - path: artifacts/data_ingestion/Chicken-fecal-images
+      hash: md5
+      md5: 9e1f8dd2eae3c29e9d635df89d438ae4.dir
+      size: 12207807
+      nfiles: 390
+    - path: artifacts/training/model.h5
+      hash: md5
+      md5: 25268bd8d509bfc1400563dcde7e17b3
+      size: 59340720
+    - path: config/config.yaml
+      hash: md5
+      md5: 95e8e4a1cfad0e27a7f8b801c430cb24
+      size: 800
+    - path: src/cnnClassifier/pipeline/stage_04_evaluation.py
+      hash: md5
+      md5: 8204783faf219204568b3e3793e2e214
+      size: 869
+    params:
+      params.yaml:
+        BATCH_SIZE: 16
+        IMAGE_SIZE:
+        - 224
+        - 224
+        - 3
+    outs:
+    - path: scores.json
+      hash: md5
+      md5: 3cf38d8c025bd85a12c662f92d240704
+      size: 73
